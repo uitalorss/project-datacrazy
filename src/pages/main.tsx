@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react";
-import { Container, Content, FormUser, Header } from "./styles";
+import {
+  Button,
+  Container,
+  Content,
+  FilterContainer,
+  FormUser,
+  Header,
+} from "./styles";
 import axios, { AxiosError } from "axios";
 import { IUsers } from "../helpers/users";
 import { ListUsers } from "./components/ListUsers/ListUsers";
 import { FieldValues, useForm } from "react-hook-form";
+import * as Dialog from "@radix-ui/react-dialog";
+import { NewUserModal } from "./components/NewUserModal/NewUserModal";
+import { PlusCircle } from "phosphor-react";
 
 export function Main() {
   const [users, setUsers] = useState<IUsers[]>();
-  const { register, handleSubmit } = useForm();
+  const { register, getValues } = useForm();
+
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     async function load() {
       try {
-        const users = await axios.get("http://localhost:3000/users");
+        const users = await axios.get(`http://localhost:3000/users${filter}`);
         setUsers(users.data);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -36,11 +48,11 @@ export function Main() {
       );
       alert(createUser.data.message);
     } catch (err) {
-      const error = err as Error | AxiosError;
-      if (!axios.isAxiosError(error)) {
-        return console.log(error);
+      const error = err as AxiosError;
+      if (axios.isAxiosError(error)) {
+        return alert(error.response!.data.message);
       }
-      return alert(error.message);
+      console.log(error);
     }
   }
 
@@ -48,7 +60,7 @@ export function Main() {
     try {
       await axios.delete(`http://localhost:3000/user/${id}`);
     } catch (err) {
-      const error = err as Error | AxiosError;
+      const error = err as AxiosError;
       if (!axios.isAxiosError(error)) {
         console.log(error);
       }
@@ -56,22 +68,66 @@ export function Main() {
     }
   }
 
+  async function handleUpdateUser(data: FieldValues) {
+    const { id, ...dataForm } = data;
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const updateUser = await axios.put(
+        `http://localhost:3000/user/${id}`,
+        dataForm,
+        axiosConfig
+      );
+      alert("Usuário alterado com sucesso");
+    } catch (err) {
+      const error = err as AxiosError;
+      if (axios.isAxiosError(error)) {
+        return alert(error.response!.data.message);
+      }
+      console.log(error);
+    }
+  }
+
   return (
     <Container>
       <Header>
         <h2>Cadastro de usuários</h2>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <Button>
+              <PlusCircle size={24} />
+              <span>Adicionar Usuário</span>
+            </Button>
+          </Dialog.Trigger>
+          <NewUserModal handleCreateUser={handleCreateUser} />
+        </Dialog.Root>
       </Header>
       <Content>
         <FormUser>
-          <input type="text" placeholder="Nome" {...register("name")} />
-          <input type="text" placeholder="E-mail" {...register("email")} />
-          <input type="text" placeholder="Telefone" {...register("phone")} />
-          <button onClick={() => handleSubmit(handleCreateUser)()}>
-            Adicionar
-          </button>
+          <input
+            type="text"
+            placeholder="Nome do usuário"
+            {...register("search")}
+          />
+          <Button
+            onClick={() => setFilter(`/search?name=${getValues("search")}`)}
+          >
+            Pesquisar
+          </Button>
         </FormUser>
+        <FilterContainer>
+          <Button onClick={() => setFilter("/younger")}>Mais novos</Button>
+          <Button onClick={() => setFilter("/older")}>Mais velhos</Button>
+        </FilterContainer>
         {users ? (
-          <ListUsers handledeleteUser={handleDeleteUser} users={users} />
+          <ListUsers
+            handledeleteUser={handleDeleteUser}
+            handleUpdateUser={handleUpdateUser}
+            users={users}
+          />
         ) : (
           <p>Não há dados para serem mostrados</p>
         )}

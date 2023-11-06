@@ -11,12 +11,13 @@ export const Container = styled.main`
 export const Header = styled.header`
   width: 100%;
   background: #0d0d0d;
-  padding: 5rem 0 5rem 0;
+  padding: 5rem;
   margin: 0 auto;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   h2 {
     font-size: 2rem;
-    padding: 2rem 0;
   }
 `;
 
@@ -32,7 +33,6 @@ export const Content = styled.div`
 export const FormUser = styled.section`
   display: flex;
   margin-top: -4.5rem;
-  justify-content: center;
   margin-bottom: 4rem;
   gap: 1rem;
 
@@ -47,35 +47,25 @@ export const FormUser = styled.section`
     line-height: 1.6;
     border-radius: 8px;
   }
+`;
 
-  button {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 1rem 1.25rem;
-    background: #1e6f9f;
-    border: none;
-    border-radius: 8px;
-    color: #f2f2f2;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
+export const FilterContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 
-    transition: background-color 0.1s;
-  }
+export const Button = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 1rem 1.25rem;
+  background: #1e6f9f;
+  border: none;
+  border-radius: 8px;
+  color: #f2f2f2;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
-    width: calc(100% - 2rem);
-    margin: -2rem 1rem 3rem 1rem;
-
-    input {
-      width: 100%;
-    }
-
-    button {
-      width: 100%;
-      justify-content: center;
-    }
-  }
+  transition: background-color 0.1s;
 `;
