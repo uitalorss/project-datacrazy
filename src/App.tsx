@@ -1,4 +1,4 @@
-import { Main } from "./pages/main";
+import { Main } from "./pages";
 import { GlobalStyled } from "./styles/global";
 
 function App() {

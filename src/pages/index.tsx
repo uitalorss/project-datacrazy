@@ -9,15 +9,16 @@ import {
 } from "./styles";
 import axios, { AxiosError } from "axios";
 import { IUsers } from "../helpers/users";
-import { ListUsers } from "./components/ListUsers/ListUsers";
+import { ListUsers } from "./components/ListUsers";
 import { FieldValues, useForm } from "react-hook-form";
 import * as Dialog from "@radix-ui/react-dialog";
-import { NewUserModal } from "./components/NewUserModal/NewUserModal";
+import { NewUserModal } from "./components/NewUserModal";
 import { PlusCircle } from "phosphor-react";
 
 export function Main() {
   const [users, setUsers] = useState<IUsers[]>();
   const { register, getValues } = useForm();
+  const [open, setOpen] = useState(false);
 
   const [filter, setFilter] = useState("");
 
@@ -46,6 +47,7 @@ export function Main() {
         data,
         axiosConfig
       );
+      setOpen(false);
       alert(createUser.data.message);
     } catch (err) {
       const error = err as AxiosError;
@@ -76,7 +78,7 @@ export function Main() {
       },
     };
     try {
-      const updateUser = await axios.put(
+      await axios.put(
         `http://localhost:3000/user/${id}`,
         dataForm,
         axiosConfig
@@ -95,7 +97,7 @@ export function Main() {
     <Container>
       <Header>
         <h2>Cadastro de usuários</h2>
-        <Dialog.Root>
+        <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger asChild>
             <Button>
               <PlusCircle size={24} />
