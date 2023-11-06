@@ -1,20 +1,21 @@
+import { Trash } from "phosphor-react";
+import { IUsers } from "../../../helpers/users";
 import { ListItem } from "./styles";
 
 interface IUserProps {
-  name: string;
-  email: string;
-  phone: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
+  user: IUsers;
+  handledeleteUser: (id: number) => void;
 }
 
-export function Users(user: IUserProps) {
+export function Users({ user, handledeleteUser }: IUserProps) {
   return (
     <ListItem>
       <p>{user.name}</p>
       <p>{user.email}</p>
       <p>{user.phone}</p>
+      <button onClick={() => handledeleteUser(user.id)}>
+        <Trash size={24} />
+      </button>
     </ListItem>
   );
 }

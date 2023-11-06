@@ -6,7 +6,7 @@ export const ListItem = styled.li`
   background: #262626;
   padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 30px;
   align-items: center;
   gap: 1rem;
   border: 1px solid #333333;

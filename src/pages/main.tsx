@@ -29,14 +29,30 @@ export function Main() {
       },
     };
     try {
-      await axios.post("http://localhost:3000/user", data, axiosConfig);
-      alert("Usuário criado com sucesso!");
+      const createUser = await axios.post(
+        "http://localhost:3000/user",
+        data,
+        axiosConfig
+      );
+      alert(createUser.data.message);
     } catch (err) {
       const error = err as Error | AxiosError;
       if (!axios.isAxiosError(error)) {
         return console.log(error);
       }
       return alert(error.message);
+    }
+  }
+
+  async function handleDeleteUser(id: number) {
+    try {
+      await axios.delete(`http://localhost:3000/user/${id}`);
+    } catch (err) {
+      const error = err as Error | AxiosError;
+      if (!axios.isAxiosError(error)) {
+        console.log(error);
+      }
+      alert(error.message);
     }
   }
 
@@ -55,7 +71,7 @@ export function Main() {
           </button>
         </FormUser>
         {users ? (
-          <ListUsers users={users} />
+          <ListUsers handledeleteUser={handleDeleteUser} users={users} />
         ) : (
           <p>Não há dados para serem mostrados</p>
         )}
