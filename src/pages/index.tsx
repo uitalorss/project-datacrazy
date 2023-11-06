@@ -121,8 +121,8 @@ export function Main() {
           </Button>
         </FormUser>
         <FilterContainer>
-          <Button onClick={() => setFilter("/younger")}>Mais novos</Button>
-          <Button onClick={() => setFilter("/older")}>Mais velhos</Button>
+          <Button onClick={() => setFilter("/younger")}>Mais recentes</Button>
+          <Button onClick={() => setFilter("/older")}>Mais antigos</Button>
         </FilterContainer>
         {users ? (
           <ListUsers
