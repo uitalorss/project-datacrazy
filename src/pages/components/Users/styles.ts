@@ -1,0 +1,41 @@
+import styled from "styled-components";
+
+export const ListItem = styled.li`
+  width: 100%;
+  list-style: none;
+  background: #262626;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  & + li {
+    margin-top: 0.75rem;
+  }
+  button {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #808080;
+    cursor: pointer;
+    &.check {
+      color: #4ea8de;
+    }
+    &.normal {
+      color: #808080;
+    }
+
+    &.delete {
+      color: #808080;
+      &:hover {
+        color: #e25858;
+      }
+    }
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 6fr 1fr 1fr;
+    padding: 1rem 0.5rem;
+  }
+`;
