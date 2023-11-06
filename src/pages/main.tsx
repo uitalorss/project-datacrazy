@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Container, Content, FormUser, Header } from "./styles";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { IUsers } from "../helpers/users";
 import { ListUsers } from "./components/ListUsers/ListUsers";
+import { FieldValues, useForm } from "react-hook-form";
 
 export function Main() {
   const [users, setUsers] = useState<IUsers[]>();
+  const { register, handleSubmit } = useForm();
+
   useEffect(() => {
     async function load() {
       try {
@@ -18,6 +21,25 @@ export function Main() {
     }
     load();
   });
+
+  async function handleCreateUser(data: FieldValues) {
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      await axios.post("http://localhost:3000/user", data, axiosConfig);
+      alert("Usuário criado com sucesso!");
+    } catch (err) {
+      const error = err as Error | AxiosError;
+      if (!axios.isAxiosError(error)) {
+        return console.log(error);
+      }
+      return alert(error.message);
+    }
+  }
+
   return (
     <Container>
       <Header>
@@ -25,10 +47,12 @@ export function Main() {
       </Header>
       <Content>
         <FormUser>
-          <input type="text" placeholder="Nome" />
-          <input type="text" placeholder="E-mail" />
-          <input type="text" placeholder="Telefone" />
-          <button>Adicionar</button>
+          <input type="text" placeholder="Nome" {...register("name")} />
+          <input type="text" placeholder="E-mail" {...register("email")} />
+          <input type="text" placeholder="Telefone" {...register("phone")} />
+          <button onClick={() => handleSubmit(handleCreateUser)()}>
+            Adicionar
+          </button>
         </FormUser>
         {users ? (
           <ListUsers users={users} />

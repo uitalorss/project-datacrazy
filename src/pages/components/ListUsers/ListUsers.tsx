@@ -9,13 +9,9 @@ interface IUserListProps {
 export function ListUsers({ users }: IUserListProps) {
   return (
     <ListContainer>
-      {users ? (
-        users.map((user) => {
-          return <Users key={user.id} {...user} />;
-        })
-      ) : (
-        <span></span>
-      )}
+      {users.map((user) => {
+        return <Users key={user.id} {...user} />;
+      })}
     </ListContainer>
   );
 }
