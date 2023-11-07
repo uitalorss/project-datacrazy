@@ -1,10 +1,13 @@
+import { UserContextProvider } from "./contexts/UserContext";
 import { Main } from "./pages";
 import { GlobalStyled } from "./styles/global";
 
 function App() {
   return (
     <>
-      <Main />
+      <UserContextProvider>
+        <Main />
+      </UserContextProvider>
       <GlobalStyled />
     </>
   );

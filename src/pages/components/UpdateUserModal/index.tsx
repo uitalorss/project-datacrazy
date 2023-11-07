@@ -1,18 +1,17 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Content, Overlay } from "./styles";
 import { Button } from "../../styles";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { UserContext } from "../../../contexts/UserContext";
 
 interface INewUserModalProps {
-  handleUpdateUser: (data: FieldValues) => void;
   userId: number;
 }
 
-export function UpdateUserModal({
-  userId,
-  handleUpdateUser,
-}: INewUserModalProps) {
-  const { register, handleSubmit, setValue } = useForm();
+export function UpdateUserModal({ userId }: INewUserModalProps) {
+  const { register, handleSubmit, setValue, reset } = useForm();
+  const { handleUpdateUser } = useContext(UserContext);
 
   return (
     <Dialog.Portal>
@@ -28,9 +27,10 @@ export function UpdateUserModal({
             onClick={() => {
               setValue("id", userId);
               handleSubmit(handleUpdateUser)();
+              reset({});
             }}
           >
-            Adicionar
+            Atualizar
           </Button>
         </div>
       </Content>

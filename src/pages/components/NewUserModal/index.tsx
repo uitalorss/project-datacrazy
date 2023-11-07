@@ -1,14 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Content, Overlay } from "./styles";
 import { Button } from "../../styles";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { UserContext } from "../../../contexts/UserContext";
 
-interface INewUserModalProps {
-  handleCreateUser: (data: FieldValues) => void;
-}
-
-export function NewUserModal({ handleCreateUser }: INewUserModalProps) {
+export function NewUserModal() {
   const { register, handleSubmit } = useForm();
+  const { handleCreateUser } = useContext(UserContext);
 
   return (
     <Dialog.Portal>

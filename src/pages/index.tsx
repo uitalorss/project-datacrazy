@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -7,18 +7,17 @@ import {
   FormUser,
   Header,
 } from "./styles";
-import axios, { AxiosError } from "axios";
-import { IUsers } from "../helpers/users";
+import axios from "axios";
 import { ListUsers } from "./components/ListUsers";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as Dialog from "@radix-ui/react-dialog";
 import { NewUserModal } from "./components/NewUserModal";
 import { PlusCircle } from "phosphor-react";
+import { UserContext } from "../contexts/UserContext";
 
 export function Main() {
-  const [users, setUsers] = useState<IUsers[]>();
+  const { users, setUsers, open, setOpen } = useContext(UserContext);
   const { register, getValues } = useForm();
-  const [open, setOpen] = useState(false);
 
   const [filter, setFilter] = useState("");
 
@@ -35,64 +34,6 @@ export function Main() {
     load();
   });
 
-  async function handleCreateUser(data: FieldValues) {
-    const axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    try {
-      const createUser = await axios.post(
-        "http://localhost:3000/user",
-        data,
-        axiosConfig
-      );
-      setOpen(false);
-      alert(createUser.data.message);
-    } catch (err) {
-      const error = err as AxiosError;
-      if (axios.isAxiosError(error)) {
-        return alert(error.response!.data.message);
-      }
-      console.log(error);
-    }
-  }
-
-  async function handleDeleteUser(id: number) {
-    try {
-      await axios.delete(`http://localhost:3000/user/${id}`);
-    } catch (err) {
-      const error = err as AxiosError;
-      if (!axios.isAxiosError(error)) {
-        console.log(error);
-      }
-      alert(error.message);
-    }
-  }
-
-  async function handleUpdateUser(data: FieldValues) {
-    const { id, ...dataForm } = data;
-    const axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    try {
-      await axios.put(
-        `http://localhost:3000/user/${id}`,
-        dataForm,
-        axiosConfig
-      );
-      alert("Usuário alterado com sucesso");
-    } catch (err) {
-      const error = err as AxiosError;
-      if (axios.isAxiosError(error)) {
-        return alert(error.response!.data.message);
-      }
-      console.log(error);
-    }
-  }
-
   return (
     <Container>
       <Header>
@@ -104,7 +45,7 @@ export function Main() {
               <span>Adicionar Usuário</span>
             </Button>
           </Dialog.Trigger>
-          <NewUserModal handleCreateUser={handleCreateUser} />
+          <NewUserModal />
         </Dialog.Root>
       </Header>
       <Content>
@@ -125,11 +66,7 @@ export function Main() {
           <Button onClick={() => setFilter("/older")}>Mais antigos</Button>
         </FilterContainer>
         {users ? (
-          <ListUsers
-            handledeleteUser={handleDeleteUser}
-            handleUpdateUser={handleUpdateUser}
-            users={users}
-          />
+          <ListUsers users={users} />
         ) : (
           <p>Não há dados para serem mostrados</p>
         )}
